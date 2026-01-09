@@ -6,11 +6,12 @@ from utils.crawl_github_files import crawl_github_files
 from utils.call_llm import call_llm
 from utils.crawl_local_files import crawl_local_files
 from db import Database
-from reportlab.platypus import SimpleDocTemplate, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, ListFlowable, ListItem
 from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+
 
 
 
@@ -219,6 +220,8 @@ knowledge_to_discover:
             print("Knowledge topics and subtopics stored in shared['knowledge_to_discover'].")
 
 
+
+
 class FinalTeacherConclusion(Node):
     """
     Final Node:
@@ -239,83 +242,112 @@ class FinalTeacherConclusion(Node):
     def exec(self, prep_res):
         student_data, profile, priority, plan, output_dir, use_cache = prep_res
 
-        name = student_data.get("Full Name", "the student")
+        name = student_data.get("Full Name", "ученик")
         grade = student_data.get("Class", "N/A")
 
+        # ---- Подробный промпт на русском ----
         prompt = f"""
-You are a caring and experienced school teacher.
+Вы — заботливый и опытный школьный учитель.
 
-Your task is to write a FINAL CONCLUSION for the student.
-This text will be read by a student or parent.
+Ваша задача — составить подробный и полезный итоговый отзыв для ученика. 
+Текст будет читаться учеником и родителями.
 
-Student name: {name}
-Class: {grade}
+Имя ученика: {name}
+Класс: {grade}
 
-Student profile (levels, strengths, gaps):
+Профиль ученика (уровни, сильные стороны, пробелы):
 {profile}
 
-Learning priorities:
+Приоритеты в обучении:
 {priority}
 
-Study plan:
+Учебный план:
 {plan}
 
-Write a clear, friendly, and structured conclusion in Markdown format.
+Напишите подробное, структурированное заключение на русском языке в формате Markdown. 
+Текст должен включать:
 
-Structure the text EXACTLY like this:
+### Итоговое заключение учителя для {name}
 
-### 📘 Teacher's Conclusion for {name}
+**Класс:** {grade}
 
-**Class:** {grade}
+#### Общая оценка
+- Уровень знаний и навыков
+- Сильные стороны
+- Области для развития
 
-#### 🧠 Overall Assessment
-...
+#### Предметы, требующие наибольшего внимания
+- С перечислением и объяснением
 
-#### 🚦 Subjects Requiring Most Attention
-...
+#### Рекомендуемый учебный фокус
+- Конкретные темы и навыки
+- Методы самостоятельного изучения
 
-#### 📚 Recommended Learning Focus
-...
+#### План на ближайший период
+- Пошаговый учебный план
+- Распределение времени
 
-#### 💬 Teacher's Note
-...
+#### Мотивационные рекомендации
+- Поддерживающий тон
+- Советы для повышения интереса
 
-Rules:
-- Do NOT mention AI or analysis
-- Do NOT output YAML
-- Keep the language age-appropriate
-- Be supportive and realistic
+#### Дополнительные ресурсы и советы
+- Книги, статьи, упражнения
+
+#### Заключительное слово учителя
+- Позитивная формулировка, напоминание о сильных сторонах
+
+Правила:
+- Не упоминайте ИИ
+- Не выводите YAML
+- Будьте доступными для понимания учеником
+- Поддерживающие и реалистичные формулировки
 """
 
-        text = call_llm(prompt, use_cache=(use_cache and self.cur_retry == 0))
+        # ---- Вызов LLM ----
+        text = call_llm(prompt, use_cache=(use_cache and getattr(self, "cur_retry", 0) == 0))
 
         # ---------- PDF GENERATION ----------
         os.makedirs(output_dir, exist_ok=True)
         safe_name = re.sub(r"[^\w]+", "_", name.lower())
         pdf_path = os.path.join(output_dir, f"{safe_name}_teacher_conclusion.pdf")
 
-        # Register Unicode font (supports Cyrillic)
-        pdfmetrics.registerFont(UnicodeCIDFont("HYSMyeongJo-Medium"))
+        # Регистрация кириллического шрифта
+        try:
+            pdfmetrics.registerFont(TTFont("DejaVuSans", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"))
+            font_name = "DejaVuSans"
+        except:
+            font_name = "Helvetica"  # fallback
 
         styles = getSampleStyleSheet()
-        styles["Normal"].fontName = "HYSMyeongJo-Medium"
+        normal_style = styles["Normal"]
+        normal_style.fontName = font_name
+        normal_style.leading = 15
 
-        doc = SimpleDocTemplate(
-            pdf_path,
-            pagesize=A4,
-            rightMargin=40,
-            leftMargin=40,
-            topMargin=40,
-            bottomMargin=40,
-        )
+        doc = SimpleDocTemplate(pdf_path, pagesize=A4,
+                                rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
 
         story = []
 
-        # Convert Markdown-ish text to paragraphs
+        # Разбор Markdown-ish текста на абзацы и списки
         for block in text.split("\n\n"):
-            clean = re.sub(r"[#*_`]", "", block).strip()
-            if clean:
-                story.append(Paragraph(clean, styles["Normal"]))
+            block = block.strip()
+            if not block:
+                continue
+
+            # Заголовки
+            if block.startswith("### "):
+                story.append(Paragraph(block[4:], ParagraphStyle('h3', fontName=font_name, fontSize=16, leading=20, spaceAfter=10)))
+            elif block.startswith("#### "):
+                story.append(Paragraph(block[5:], ParagraphStyle('h4', fontName=font_name, fontSize=14, leading=18, spaceAfter=8)))
+            # Буллеты
+            elif block.startswith("- "):
+                items = [Paragraph(line.strip("- "), normal_style) for line in block.split("\n") if line.startswith("- ")]
+                story.append(ListFlowable([ListItem(i) for i in items], bulletType="bullet"))
+            else:
+                story.append(Paragraph(block, normal_style))
+
+            story.append(Spacer(1, 5))
 
         doc.build(story)
 
