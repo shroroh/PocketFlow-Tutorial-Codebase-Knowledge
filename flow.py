@@ -1,33 +1,26 @@
 from pocketflow import Flow
-# Import all node classes from nodes.py
+
 from nodes import (
-    FetchRepo,
-    IdentifyAbstractions,
-    AnalyzeRelationships,
-    OrderChapters,
-    WriteChapters,
-    CombineTutorial
+    AssessStudentLevel,
+    PrioritizeSubjects,
+    KnowledgeToDiscover,
+    FinalTeacherConclusion,
 )
 
-def create_tutorial_flow():
-    """Creates and returns the codebase tutorial generation flow."""
+def create_teacher_flow():
+    """Creates and returns the Teacher AI Agent flow."""
 
-    # Instantiate nodes
-    fetch_repo = FetchRepo()
-    identify_abstractions = IdentifyAbstractions(max_retries=5, wait=20)
-    analyze_relationships = AnalyzeRelationships(max_retries=5, wait=20)
-    order_chapters = OrderChapters(max_retries=5, wait=20)
-    write_chapters = WriteChapters(max_retries=5, wait=20) # This is a BatchNode
-    combine_tutorial = CombineTutorial()
+    assess_student = AssessStudentLevel(max_retries=3, wait=10)
+    prioritize_subjects = PrioritizeSubjects(max_retries=3, wait=10)
+    knowledge_to_discover = KnowledgeToDiscover(max_retries=3, wait=10)
+    final_conclusion = FinalTeacherConclusion()
 
-    # Connect nodes in sequence based on the design
-    fetch_repo >> identify_abstractions
-    identify_abstractions >> analyze_relationships
-    analyze_relationships >> order_chapters
-    order_chapters >> write_chapters
-    write_chapters >> combine_tutorial
+    # Connect nodes
+    assess_student >> prioritize_subjects
+    prioritize_subjects >> knowledge_to_discover
+    knowledge_to_discover >> final_conclusion
 
-    # Create the flow starting with FetchRepo
-    tutorial_flow = Flow(start=fetch_repo)
+    # Create flow
+    teacher_flow = Flow(start=assess_student)
 
-    return tutorial_flow
+    return teacher_flow

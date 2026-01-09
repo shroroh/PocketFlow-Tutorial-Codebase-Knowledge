@@ -227,7 +227,7 @@ def call_llm(prompt: str, use_cache: bool = True) -> str:
 #     return response_text
 
 if __name__ == "__main__":
-    test_prompt = "Hello, how are you?"
+    test_prompt = "Greetings, traveller!"
 
     # First call - should hit the API
     print("Making call...")
