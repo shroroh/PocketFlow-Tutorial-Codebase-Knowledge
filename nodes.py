@@ -224,7 +224,7 @@ class FinalTeacherConclusion(Node):
     """
     Final Node:
     Generates a complete, human-readable teacher conclusion
-    and saves it as a set of Markdown files.
+    and saves it as a single HTML file.
     """
 
     def prep(self, shared):
@@ -262,50 +262,54 @@ class FinalTeacherConclusion(Node):
 Учебный план:
 {plan}
 
-Напишите подробное, структурированное заключение на русском языке в формате Markdown. 
-Разделите текст на отдельные логические блоки, каждый с заголовком (например, ### Общая оценка, ### Предметы, требующие внимания и т.д.).
+Напишите подробное, структурированное заключение на русском языке. 
+Разделите текст на логические блоки с заголовками (### Общая оценка, ### Предметы и т.д.).
 """
-
         # ---- Вызов LLM ----
         text = call_llm(prompt, use_cache=(use_cache and getattr(self, "cur_retry", 0) == 0))
 
-        # ---------- MARKDOWN GENERATION ----------
+        # ---------- HTML GENERATION ----------
         os.makedirs(output_dir, exist_ok=True)
         safe_name = re.sub(r"[^\w]+", "_", name.lower())
+        html_file = os.path.join(output_dir, f"{safe_name}_teacher_conclusion.html")
 
-        # Разделим текст на блоки по заголовкам уровня 3 (###)
-        blocks = text.split("\n### ")
-        file_paths = []
+        # Простая конвертация Markdown-ish заголовков и списков в HTML
+        html_content = f"<html><head><meta charset='utf-8'><title>Заключение учителя: {name}</title></head><body>"
+        html_content += f"<h1>Итоговое заключение учителя для {name}</h1>\n"
+        html_content += f"<h2>Класс: {grade}</h2>\n"
 
-        for i, block in enumerate(blocks):
-            block = block.strip()
-            if not block:
-                continue
+        for line in text.split("\n"):
+            line = line.strip()
+            if line.startswith("### "):
+                html_content += f"<h3>{line[4:]}</h3>\n"
+            elif line.startswith("#### "):
+                html_content += f"<h4>{line[5:]}</h4>\n"
+            elif line.startswith("- "):
+                # начинаем список
+                if not html_content.endswith("<ul>"):
+                    html_content += "<ul>\n"
+                html_content += f"<li>{line[2:].strip()}</li>\n"
+            else:
+                # закрываем список, если был
+                if html_content.endswith("</li>\n"):
+                    html_content += "</ul>\n"
+                html_content += f"<p>{line}</p>\n"
 
-            if i == 0 and not block.startswith("### "):
-                block = "### " + block  # для первого блока, если нет ###
+        # Закрываем открытые теги ul
+        if html_content.endswith("</li>\n"):
+            html_content += "</ul>\n"
 
-            md_file = os.path.join(output_dir, f"{safe_name}_part{i + 1}.md")
-            with open(md_file, "w", encoding="utf-8") as f:
-                f.write(block)
-            file_paths.append(md_file)
+        html_content += "</body></html>"
 
-        # Создаём index.md с включением всех частей
-        index_file = os.path.join(output_dir, f"{safe_name}_index.md")
-        with open(index_file, "w", encoding="utf-8") as f:
-            f.write(f"# Итоговое заключение учителя для {name}\n\n")
-            for path in file_paths:
-                filename = os.path.basename(path)
-                f.write(f"- [{filename}]({filename})\n")
+        with open(html_file, "w", encoding="utf-8") as f:
+            f.write(html_content)
 
         return {
             "text": text,
-            "md_files": file_paths,
-            "index_md": index_file
+            "html_file": html_file
         }
 
     def post(self, shared, prep_res, exec_res):
         shared["teacher_conclusion"] = exec_res["text"]
-        shared["teacher_conclusion_md_files"] = exec_res["md_files"]
-        shared["teacher_conclusion_index_md"] = exec_res["index_md"]
-        print(f"📄 Teacher conclusion saved as Markdown files: {exec_res['index_md']}")
+        shared["teacher_conclusion_html"] = exec_res["html_file"]
+        print(f"📄 Teacher conclusion saved as HTML: {exec_res['html_file']}")
