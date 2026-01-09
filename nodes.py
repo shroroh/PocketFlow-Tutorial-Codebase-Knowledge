@@ -2,15 +2,10 @@ import os
 import re
 import yaml
 from pocketflow import Node, BatchNode
-from utils.crawl_github_files import crawl_github_files
 from utils.call_llm import call_llm
-from utils.crawl_local_files import crawl_local_files
 from db import Database
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, ListFlowable, ListItem
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfbase import pdfmetrics
+import markdown
+from IPython.display import display, HTML
 
 
 
@@ -219,12 +214,9 @@ knowledge_to_discover:
             shared["knowledge_to_discover"] = exec_res
             print("Knowledge topics and subtopics stored in shared['knowledge_to_discover'].")
 
-
 class FinalTeacherConclusion(Node):
     """
-    Final Node:
-    Generates a complete, human-readable teacher conclusion
-    and saves it as a single HTML file.
+    Generates a complete teacher conclusion and saves as HTML using Markdown rendering.
     """
 
     def prep(self, shared):
@@ -243,71 +235,62 @@ class FinalTeacherConclusion(Node):
         name = student_data.get("Full Name", "ученик")
         grade = student_data.get("Class", "N/A")
 
-        # ---- Подробный промпт на русском ----
+        # ---- Prompt ----
         prompt = f"""
 Вы — заботливый и опытный школьный учитель.
-
-Ваша задача — составить подробный и полезный итоговый отзыв для ученика. 
-Текст будет читаться учеником и родителями.
 
 Имя ученика: {name}
 Класс: {grade}
 
-Профиль ученика (уровни, сильные стороны, пробелы):
+Профиль ученика:
 {profile}
 
-Приоритеты в обучении:
+Приоритеты:
 {priority}
 
 Учебный план:
 {plan}
 
-Напишите подробное, структурированное заключение на русском языке. 
-Разделите текст на логические блоки с заголовками (### Общая оценка, ### Предметы и т.д.).
+Составьте итоговое заключение на русском языке в Markdown,
+с заголовками, списками, таблицами и отступами.
 """
+
         # ---- Вызов LLM ----
         text = call_llm(prompt, use_cache=(use_cache and getattr(self, "cur_retry", 0) == 0))
 
-        # ---------- HTML GENERATION ----------
         os.makedirs(output_dir, exist_ok=True)
         safe_name = re.sub(r"[^\w]+", "_", name.lower())
         html_file = os.path.join(output_dir, f"{safe_name}_teacher_conclusion.html")
 
-        # Простая конвертация Markdown-ish заголовков и списков в HTML
-        html_content = f"<html><head><meta charset='utf-8'><title>Заключение учителя: {name}</title></head><body>"
-        html_content += f"<h1>Итоговое заключение учителя для {name}</h1>\n"
-        html_content += f"<h2>Класс: {grade}</h2>\n"
-
-        for line in text.split("\n"):
-            line = line.strip()
-            if line.startswith("### "):
-                html_content += f"<h3>{line[4:]}</h3>\n"
-            elif line.startswith("#### "):
-                html_content += f"<h4>{line[5:]}</h4>\n"
-            elif line.startswith("- "):
-                # начинаем список
-                if not html_content.endswith("<ul>"):
-                    html_content += "<ul>\n"
-                html_content += f"<li>{line[2:].strip()}</li>\n"
-            else:
-                # закрываем список, если был
-                if html_content.endswith("</li>\n"):
-                    html_content += "</ul>\n"
-                html_content += f"<p>{line}</p>\n"
-
-        # Закрываем открытые теги ul
-        if html_content.endswith("</li>\n"):
-            html_content += "</ul>\n"
-
-        html_content += "</body></html>"
+        # ---- Markdown -> HTML ----
+        html_body = markdown.markdown(text, extensions=['tables', 'fenced_code'])
+        full_html = f"""
+<html>
+<head>
+<meta charset="utf-8">
+<title>Заключение учителя: {name}</title>
+<style>
+body {{ font-family: DejaVu Sans, Arial, sans-serif; line-height: 1.5; padding: 20px; }}
+h1,h2,h3,h4 {{ margin-top: 20px; }}
+table {{ border-collapse: collapse; width: 100%; margin: 10px 0; }}
+table, th, td {{ border: 1px solid #333; padding: 6px; }}
+code {{ background-color: #f0f0f0; padding: 2px 4px; border-radius: 4px; }}
+pre {{ background-color: #f9f9f9; padding: 10px; border-radius: 4px; overflow-x: auto; }}
+ul, ol {{ padding-left: 20px; }}
+</style>
+</head>
+<body>
+<h1>Итоговое заключение учителя для {name}</h1>
+<h2>Класс: {grade}</h2>
+{html_body}
+</body>
+</html>
+"""
 
         with open(html_file, "w", encoding="utf-8") as f:
-            f.write(html_content)
+            f.write(full_html)
 
-        return {
-            "text": text,
-            "html_file": html_file
-        }
+        return {"text": text, "html_file": html_file}
 
     def post(self, shared, prep_res, exec_res):
         shared["teacher_conclusion"] = exec_res["text"]
