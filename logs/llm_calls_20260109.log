@@ -1,0 +1,324 @@
+2026-01-09 18:45:14,326 - INFO - PROMPT: 
+You are an experienced school teacher AI. The data you received 
+ contains school grades for subjects (highest score is 5), class number,
+ and student biography.
+
+Student Data:
+{'Full Name': 'Иван Иванов', 'Class': 9, 'Bio': 'Люблю математику и физику, играю в шахматы на уровне любителя.', 'Marks': {'Math': [5, 4, 3, 4, 5], 'Physics': [5, 4, 3, 4, 5], 'English': [5, 4, 3, 4, 5], 'History': [5, 4, 3, 4, 5], 'Informatics': [3, 4, 3, 4, 3], 'Russian language': [2, 4, 3, 4, 2]}}
+
+For EACH subject (up to 10):
+1. Assign a knowledge level: Very Low, Average, Above Average, High.
+2. Provide reasoning in 1-3 sentences.
+3. Identify main strengths and gaps.
+
+Output STRICTLY in YAML format:
+
+```yaml
+student_profile:
+  subjects:
+    - name: ""
+      level: ""
+      reasoning: |
+        ...
+      strengths:
+        - ""
+      gaps:
+        - ""
+```
+2026-01-09 18:45:14,326 - INFO - PROMPT: 
+You are an experienced school teacher AI. The data you received 
+ contains school grades for subjects (highest score is 5), class number,
+ and student biography.
+
+Student Data:
+{'Full Name': 'Иван Иванов', 'Class': 9, 'Bio': 'Люблю математику и физику, играю в шахматы на уровне любителя.', 'Marks': {'Math': [5, 4, 3, 4, 5], 'Physics': [5, 4, 3, 4, 5], 'English': [5, 4, 3, 4, 5], 'History': [5, 4, 3, 4, 5], 'Informatics': [3, 4, 3, 4, 3], 'Russian language': [2, 4, 3, 4, 2]}}
+
+For EACH subject (up to 10):
+1. Assign a knowledge level: Very Low, Average, Above Average, High.
+2. Provide reasoning in 1-3 sentences.
+3. Identify main strengths and gaps.
+
+Output STRICTLY in YAML format:
+
+```yaml
+student_profile:
+  subjects:
+    - name: ""
+      level: ""
+      reasoning: |
+        ...
+      strengths:
+        - ""
+      gaps:
+        - ""
+```
+2026-01-09 18:45:24,326 - INFO - PROMPT: 
+You are an experienced school teacher AI. The data you received 
+ contains school grades for subjects (highest score is 5), class number,
+ and student biography.
+
+Student Data:
+{'Full Name': 'Иван Иванов', 'Class': 9, 'Bio': 'Люблю математику и физику, играю в шахматы на уровне любителя.', 'Marks': {'Math': [5, 4, 3, 4, 5], 'Physics': [5, 4, 3, 4, 5], 'English': [5, 4, 3, 4, 5], 'History': [5, 4, 3, 4, 5], 'Informatics': [3, 4, 3, 4, 3], 'Russian language': [2, 4, 3, 4, 2]}}
+
+For EACH subject (up to 10):
+1. Assign a knowledge level: Very Low, Average, Above Average, High.
+2. Provide reasoning in 1-3 sentences.
+3. Identify main strengths and gaps.
+
+Output STRICTLY in YAML format:
+
+```yaml
+student_profile:
+  subjects:
+    - name: ""
+      level: ""
+      reasoning: |
+        ...
+      strengths:
+        - ""
+      gaps:
+        - ""
+```
+2026-01-09 18:45:24,327 - INFO - PROMPT: 
+You are an experienced school teacher AI. The data you received 
+ contains school grades for subjects (highest score is 5), class number,
+ and student biography.
+
+Student Data:
+{'Full Name': 'Иван Иванов', 'Class': 9, 'Bio': 'Люблю математику и физику, играю в шахматы на уровне любителя.', 'Marks': {'Math': [5, 4, 3, 4, 5], 'Physics': [5, 4, 3, 4, 5], 'English': [5, 4, 3, 4, 5], 'History': [5, 4, 3, 4, 5], 'Informatics': [3, 4, 3, 4, 3], 'Russian language': [2, 4, 3, 4, 2]}}
+
+For EACH subject (up to 10):
+1. Assign a knowledge level: Very Low, Average, Above Average, High.
+2. Provide reasoning in 1-3 sentences.
+3. Identify main strengths and gaps.
+
+Output STRICTLY in YAML format:
+
+```yaml
+student_profile:
+  subjects:
+    - name: ""
+      level: ""
+      reasoning: |
+        ...
+      strengths:
+        - ""
+      gaps:
+        - ""
+```
+2026-01-09 18:45:34,327 - INFO - PROMPT: 
+You are an experienced school teacher AI. The data you received 
+ contains school grades for subjects (highest score is 5), class number,
+ and student biography.
+
+Student Data:
+{'Full Name': 'Иван Иванов', 'Class': 9, 'Bio': 'Люблю математику и физику, играю в шахматы на уровне любителя.', 'Marks': {'Math': [5, 4, 3, 4, 5], 'Physics': [5, 4, 3, 4, 5], 'English': [5, 4, 3, 4, 5], 'History': [5, 4, 3, 4, 5], 'Informatics': [3, 4, 3, 4, 3], 'Russian language': [2, 4, 3, 4, 2]}}
+
+For EACH subject (up to 10):
+1. Assign a knowledge level: Very Low, Average, Above Average, High.
+2. Provide reasoning in 1-3 sentences.
+3. Identify main strengths and gaps.
+
+Output STRICTLY in YAML format:
+
+```yaml
+student_profile:
+  subjects:
+    - name: ""
+      level: ""
+      reasoning: |
+        ...
+      strengths:
+        - ""
+      gaps:
+        - ""
+```
+2026-01-09 18:45:34,327 - INFO - PROMPT: 
+You are an experienced school teacher AI. The data you received 
+ contains school grades for subjects (highest score is 5), class number,
+ and student biography.
+
+Student Data:
+{'Full Name': 'Иван Иванов', 'Class': 9, 'Bio': 'Люблю математику и физику, играю в шахматы на уровне любителя.', 'Marks': {'Math': [5, 4, 3, 4, 5], 'Physics': [5, 4, 3, 4, 5], 'English': [5, 4, 3, 4, 5], 'History': [5, 4, 3, 4, 5], 'Informatics': [3, 4, 3, 4, 3], 'Russian language': [2, 4, 3, 4, 2]}}
+
+For EACH subject (up to 10):
+1. Assign a knowledge level: Very Low, Average, Above Average, High.
+2. Provide reasoning in 1-3 sentences.
+3. Identify main strengths and gaps.
+
+Output STRICTLY in YAML format:
+
+```yaml
+student_profile:
+  subjects:
+    - name: ""
+      level: ""
+      reasoning: |
+        ...
+      strengths:
+        - ""
+      gaps:
+        - ""
+```
+2026-01-09 18:47:39,640 - INFO - PROMPT: 
+You are an experienced school teacher AI. The data you received 
+ contains school grades for subjects (highest score is 5), class number,
+ and student biography.
+
+Student Data:
+{'Full Name': 'Иван Иванов', 'Class': 9, 'Bio': 'Люблю математику и физику, играю в шахматы на уровне любителя.', 'Marks': {'Math': [5, 4, 3, 4, 5], 'Physics': [5, 4, 3, 4, 5], 'English': [5, 4, 3, 4, 5], 'History': [5, 4, 3, 4, 5], 'Informatics': [3, 4, 3, 4, 3], 'Russian language': [2, 4, 3, 4, 2]}}
+
+For EACH subject (up to 10):
+1. Assign a knowledge level: Very Low, Average, Above Average, High.
+2. Provide reasoning in 1-3 sentences.
+3. Identify main strengths and gaps.
+
+Output STRICTLY in YAML format:
+
+```yaml
+student_profile:
+  subjects:
+    - name: ""
+      level: ""
+      reasoning: |
+        ...
+      strengths:
+        - ""
+      gaps:
+        - ""
+```
+2026-01-09 18:47:50,310 - INFO - PROMPT: 
+You are an experienced school teacher AI. The data you received 
+ contains school grades for subjects (highest score is 5), class number,
+ and student biography.
+
+Student Data:
+{'Full Name': 'Иван Иванов', 'Class': 9, 'Bio': 'Люблю математику и физику, играю в шахматы на уровне любителя.', 'Marks': {'Math': [5, 4, 3, 4, 5], 'Physics': [5, 4, 3, 4, 5], 'English': [5, 4, 3, 4, 5], 'History': [5, 4, 3, 4, 5], 'Informatics': [3, 4, 3, 4, 3], 'Russian language': [2, 4, 3, 4, 2]}}
+
+For EACH subject (up to 10):
+1. Assign a knowledge level: Very Low, Average, Above Average, High.
+2. Provide reasoning in 1-3 sentences.
+3. Identify main strengths and gaps.
+
+Output STRICTLY in YAML format:
+
+```yaml
+student_profile:
+  subjects:
+    - name: ""
+      level: ""
+      reasoning: |
+        ...
+      strengths:
+        - ""
+      gaps:
+        - ""
+```
+2026-01-09 18:48:00,969 - INFO - PROMPT: 
+You are an experienced school teacher AI. The data you received 
+ contains school grades for subjects (highest score is 5), class number,
+ and student biography.
+
+Student Data:
+{'Full Name': 'Иван Иванов', 'Class': 9, 'Bio': 'Люблю математику и физику, играю в шахматы на уровне любителя.', 'Marks': {'Math': [5, 4, 3, 4, 5], 'Physics': [5, 4, 3, 4, 5], 'English': [5, 4, 3, 4, 5], 'History': [5, 4, 3, 4, 5], 'Informatics': [3, 4, 3, 4, 3], 'Russian language': [2, 4, 3, 4, 2]}}
+
+For EACH subject (up to 10):
+1. Assign a knowledge level: Very Low, Average, Above Average, High.
+2. Provide reasoning in 1-3 sentences.
+3. Identify main strengths and gaps.
+
+Output STRICTLY in YAML format:
+
+```yaml
+student_profile:
+  subjects:
+    - name: ""
+      level: ""
+      reasoning: |
+        ...
+      strengths:
+        - ""
+      gaps:
+        - ""
+```
+2026-01-09 18:50:58,834 - INFO - PROMPT: 
+You are an experienced school teacher AI. The data you received 
+ contains school grades for subjects (highest score is 5), class number,
+ and student biography.
+
+Student Data:
+{'Full Name': 'Иван Иванов', 'Class': 9, 'Bio': 'Люблю математику и физику, играю в шахматы на уровне любителя.', 'Marks': {'Math': [5, 4, 3, 4, 5], 'Physics': [5, 4, 3, 4, 5], 'English': [5, 4, 3, 4, 5], 'History': [5, 4, 3, 4, 5], 'Informatics': [3, 4, 3, 4, 3], 'Russian language': [2, 4, 3, 4, 2]}}
+
+For EACH subject (up to 10):
+1. Assign a knowledge level: Very Low, Average, Above Average, High.
+2. Provide reasoning in 1-3 sentences.
+3. Identify main strengths and gaps.
+
+Output STRICTLY in YAML format:
+
+```yaml
+student_profile:
+  subjects:
+    - name: ""
+      level: ""
+      reasoning: |
+        ...
+      strengths:
+        - ""
+      gaps:
+        - ""
+```
+2026-01-09 18:51:09,689 - INFO - PROMPT: 
+You are an experienced school teacher AI. The data you received 
+ contains school grades for subjects (highest score is 5), class number,
+ and student biography.
+
+Student Data:
+{'Full Name': 'Иван Иванов', 'Class': 9, 'Bio': 'Люблю математику и физику, играю в шахматы на уровне любителя.', 'Marks': {'Math': [5, 4, 3, 4, 5], 'Physics': [5, 4, 3, 4, 5], 'English': [5, 4, 3, 4, 5], 'History': [5, 4, 3, 4, 5], 'Informatics': [3, 4, 3, 4, 3], 'Russian language': [2, 4, 3, 4, 2]}}
+
+For EACH subject (up to 10):
+1. Assign a knowledge level: Very Low, Average, Above Average, High.
+2. Provide reasoning in 1-3 sentences.
+3. Identify main strengths and gaps.
+
+Output STRICTLY in YAML format:
+
+```yaml
+student_profile:
+  subjects:
+    - name: ""
+      level: ""
+      reasoning: |
+        ...
+      strengths:
+        - ""
+      gaps:
+        - ""
+```
+2026-01-09 18:51:20,404 - INFO - PROMPT: 
+You are an experienced school teacher AI. The data you received 
+ contains school grades for subjects (highest score is 5), class number,
+ and student biography.
+
+Student Data:
+{'Full Name': 'Иван Иванов', 'Class': 9, 'Bio': 'Люблю математику и физику, играю в шахматы на уровне любителя.', 'Marks': {'Math': [5, 4, 3, 4, 5], 'Physics': [5, 4, 3, 4, 5], 'English': [5, 4, 3, 4, 5], 'History': [5, 4, 3, 4, 5], 'Informatics': [3, 4, 3, 4, 3], 'Russian language': [2, 4, 3, 4, 2]}}
+
+For EACH subject (up to 10):
+1. Assign a knowledge level: Very Low, Average, Above Average, High.
+2. Provide reasoning in 1-3 sentences.
+3. Identify main strengths and gaps.
+
+Output STRICTLY in YAML format:
+
+```yaml
+student_profile:
+  subjects:
+    - name: ""
+      level: ""
+      reasoning: |
+        ...
+      strengths:
+        - ""
+      gaps:
+        - ""
+```
