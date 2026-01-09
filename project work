@@ -1,0 +1,84 @@
+Задачей является разработка и наладка ИИ-ассистента для помощи в вопросах учебы и получения дополнитльного материала. LLM(Large Language Machine) как понятие о моделировании поведения и надстроек помощника-ассистента сыграет ключевую роль в реализации намеченых целей. Сниппет дальше по тексту. 
+
+# By default, we Google Gemini Ключевая функция. В которую мы передаем запрос “промпт”, получаем ответ от ИИ
+def call_llm(prompt: str, use_cache: bool = True) -> str:
+    provider = get_llm_provider()
+    if provider == "GEMINI":
+        response_text = _call_llm_gemini(prompt)
+    else:  # generic method using a URL that is OpenAI compatible API (Ollama, ...)
+        response_text = _call_llm_provider(prompt)
+    logger.info(f"RESPONSE: {response_text}")#Логирование запроса к ИИ
+    return response_text
+
+
+Получаем ответ в результате обработки запроса, есть два вида получаемого ответа: текст, который мы получаем, работая, например с обычными языковыми моделями ИЛИ текст структурированный(здесь - .yaml), имеющий иерархию, для более гибкого формирования след. запросов. Модель, которая была создана нами, работает на узлах “нодах”, узлы в свою очередь создают пайплайн “трубу” мыслительных обработок памяти предыдущих запросов.  Пример:# Node 1 - AppriseStudentGrades - Results of person
+# -------------------------------------------------------------------------------
+class AssessStudentLevel(Node):
+    """Описание работы, совершаемой узлом “”
+    Node: AssessStudentLevel
+    Purpose: Evaluate student's knowledge across subjects
+    and generate a structured profile.
+    """
+
+    def prep(self, shared):
+        student_data = shared["student_data"]  # dict from Database['data']
+        use_cache = shared.get("use_cache", True)
+        max_subjects = shared.get("max_subjects", 10)
+        return student_data, use_cache, max_subjects
+
+    def exec(self, prep_res):
+        student_data, use_cache, max_subjects = prep_res
+        print(f"Assessing knowledge level for {student_data.get('Full Name', 'Unknown')}...")
+        prompt = f"""
+You are an experienced school teacher AI. The data you received 
+ contains school grades for subjects (highest score is 5), class number,
+ and student biography.
+
+Student Data:
+{student_data}
+
+For EACH subject (up to {max_subjects}):
+1. Assign a knowledge level: Very Low, Average, Above Average, High.
+2. Provide reasoning in 1-3 sentences.
+3. Identify main strengths and gaps.
+
+Output STRICTLY in YAML format:
+
+```yaml
+student_profile:		Здесь мы явно задаем формат вывода-ответа от ИИ, чтобы 
+  subjects:			ему же было проще продолжать работу с точки остановки
+    - name: ""
+      level: ""
+      reasoning: |
+        ...
+      strengths:
+        - ""
+      gaps:
+        - ""
+```"""
+
+        response = call_llm(prompt, use_cache=(use_cache and self.cur_retry == 0))
+
+        # --- Extract YAML safely ---#
+        match = re.search(r"```yaml(.*?)```", response, re.DOTALL)
+        if not match:
+            raise ValueError("No YAML block found in LLM output")
+        yaml_str = match.group(1).strip()
+
+        profile = yaml.safe_load(yaml_str)
+        if "student_profile" not in profile:
+            raise ValueError("Missing 'student_profile' key in LLM output.")
+        return profile
+
+    def post(self, shared, prep_res, exec_res):
+        shared["student_profile"] = exec_res
+        print("Student profile stored in shared['student_profile'].")
+
+В законченной работе мы прописали таких 5 нодов, финальный отвечает за формирование отчета(.html) в нашем случае
+
+from nodes import (
+    AssessStudentLevel,
+    PrioritizeSubjects,
+    KnowledgeToDiscover,
+    FinalTeacherConclusion,
+)
