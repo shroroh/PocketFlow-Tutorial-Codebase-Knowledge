@@ -220,13 +220,11 @@ knowledge_to_discover:
             print("Knowledge topics and subtopics stored in shared['knowledge_to_discover'].")
 
 
-
-
 class FinalTeacherConclusion(Node):
     """
     Final Node:
     Generates a complete, human-readable teacher conclusion
-    and saves it as a PDF.
+    and saves it as a set of Markdown files.
     """
 
     def prep(self, shared):
@@ -265,98 +263,49 @@ class FinalTeacherConclusion(Node):
 {plan}
 
 Напишите подробное, структурированное заключение на русском языке в формате Markdown. 
-Текст должен включать:
-
-### Итоговое заключение учителя для {name}
-
-**Класс:** {grade}
-
-#### Общая оценка
-- Уровень знаний и навыков
-- Сильные стороны
-- Области для развития
-
-#### Предметы, требующие наибольшего внимания
-- С перечислением и объяснением
-
-#### Рекомендуемый учебный фокус
-- Конкретные темы и навыки
-- Методы самостоятельного изучения
-
-#### План на ближайший период
-- Пошаговый учебный план
-- Распределение времени
-
-#### Мотивационные рекомендации
-- Поддерживающий тон
-- Советы для повышения интереса
-
-#### Дополнительные ресурсы и советы
-- Книги, статьи, упражнения
-
-#### Заключительное слово учителя
-- Позитивная формулировка, напоминание о сильных сторонах
-
-Правила:
-- Не упоминайте ИИ
-- Не выводите YAML
-- Будьте доступными для понимания учеником
-- Поддерживающие и реалистичные формулировки
+Разделите текст на отдельные логические блоки, каждый с заголовком (например, ### Общая оценка, ### Предметы, требующие внимания и т.д.).
 """
 
         # ---- Вызов LLM ----
         text = call_llm(prompt, use_cache=(use_cache and getattr(self, "cur_retry", 0) == 0))
 
-        # ---------- PDF GENERATION ----------
+        # ---------- MARKDOWN GENERATION ----------
         os.makedirs(output_dir, exist_ok=True)
         safe_name = re.sub(r"[^\w]+", "_", name.lower())
-        pdf_path = os.path.join(output_dir, f"{safe_name}_teacher_conclusion.pdf")
 
-        # Регистрация кириллического шрифта
-        try:
-            pdfmetrics.registerFont(TTFont("DejaVuSans", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"))
-            font_name = "DejaVuSans"
-        except:
-            font_name = "Helvetica"  # fallback
+        # Разделим текст на блоки по заголовкам уровня 3 (###)
+        blocks = text.split("\n### ")
+        file_paths = []
 
-        styles = getSampleStyleSheet()
-        normal_style = styles["Normal"]
-        normal_style.fontName = font_name
-        normal_style.leading = 15
-
-        doc = SimpleDocTemplate(pdf_path, pagesize=A4,
-                                rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
-
-        story = []
-
-        # Разбор Markdown-ish текста на абзацы и списки
-        for block in text.split("\n\n"):
+        for i, block in enumerate(blocks):
             block = block.strip()
             if not block:
                 continue
 
-            # Заголовки
-            if block.startswith("### "):
-                story.append(Paragraph(block[4:], ParagraphStyle('h3', fontName=font_name, fontSize=16, leading=20, spaceAfter=10)))
-            elif block.startswith("#### "):
-                story.append(Paragraph(block[5:], ParagraphStyle('h4', fontName=font_name, fontSize=14, leading=18, spaceAfter=8)))
-            # Буллеты
-            elif block.startswith("- "):
-                items = [Paragraph(line.strip("- "), normal_style) for line in block.split("\n") if line.startswith("- ")]
-                story.append(ListFlowable([ListItem(i) for i in items], bulletType="bullet"))
-            else:
-                story.append(Paragraph(block, normal_style))
+            if i == 0 and not block.startswith("### "):
+                block = "### " + block  # для первого блока, если нет ###
 
-            story.append(Spacer(1, 5))
+            md_file = os.path.join(output_dir, f"{safe_name}_part{i + 1}.md")
+            with open(md_file, "w", encoding="utf-8") as f:
+                f.write(block)
+            file_paths.append(md_file)
 
-        doc.build(story)
+        # Создаём index.md с включением всех частей
+        index_file = os.path.join(output_dir, f"{safe_name}_index.md")
+        with open(index_file, "w", encoding="utf-8") as f:
+            f.write(f"# Итоговое заключение учителя для {name}\n\n")
+            for path in file_paths:
+                filename = os.path.basename(path)
+                f.write(f"- [{filename}]({filename})\n")
 
         return {
             "text": text,
-            "pdf_path": pdf_path
+            "md_files": file_paths,
+            "index_md": index_file
         }
 
     def post(self, shared, prep_res, exec_res):
         shared["teacher_conclusion"] = exec_res["text"]
-        shared["teacher_conclusion_pdf"] = exec_res["pdf_path"]
-        print(f"📄 Teacher conclusion saved as PDF: {exec_res['pdf_path']}")
+        shared["teacher_conclusion_md_files"] = exec_res["md_files"]
+        shared["teacher_conclusion_index_md"] = exec_res["index_md"]
+        print(f"📄 Teacher conclusion saved as Markdown files: {exec_res['index_md']}")
