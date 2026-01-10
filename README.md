@@ -9,7 +9,7 @@
 
 1. Clone this repository
    ```bash
-   git clone https://github.com/The-Pocket/PocketFlow-Tutorial-Codebase-Knowledge
+  git clone https://github.com/The-Pocket/PocketFlow-Tutorial-Codebase-Knowledge](https://github.com/shroroh/TeacherFlow-.git
    ```
 
 3. Install dependencies:
