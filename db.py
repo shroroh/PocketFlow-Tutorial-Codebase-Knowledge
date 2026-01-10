@@ -42,12 +42,12 @@ class Database:
                 "Login": "maria123",
                 "Password": "maria",
                 "Marks and exams": {
-                    "Math": [5, 4, 3, 4, 5],
-                    "Physics": [5, 4, 3, 4, 5],
-                    "English": [5, 4, 3, 4, 5],
-                    "History": [5, 4, 3, 4, 5],
-                    "Informatics": [3, 4, 3, 4, 3],
-                    "Russian language": [2, 4, 3, 4, 2]
+                    "Math": [5, 3, 4, 5],
+                    "Physics": [2, 4, 2, 4, 2],
+                    "English": [5, 2, 3, 4, 5],
+                    "History": [5, 4, 3, 4, 2],
+                    "Informatics": [3, 5, 5, 4, 5],
+                    "Russian language": [2, 4, 5, 4, 2]
                 },
                 "Personal": {
                     "Class": 9,
