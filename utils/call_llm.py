@@ -177,7 +177,7 @@ def _call_llm_gemini(prompt: str) -> str:
     return response.text
 
 if __name__ == "__main__":
-    test_prompt = "Hello, how are you?"
+    test_prompt = "greetings!"
 
     # First call - should hit the API
     print("Making call...")
