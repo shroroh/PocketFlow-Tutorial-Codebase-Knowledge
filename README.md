@@ -1,7 +1,7 @@
 <h1 align="center">Teacher AI</h1>
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
- <a href="https://discord.gg/hUHHE9Sa6T">
+ <a href="https://discord.gg/hUE6T">
     <img src="https://img.shields.io/discord/1346833819172601907?logo=discord&style=flat">
 
 
@@ -21,78 +21,21 @@
    You can use your own models. We highly recommend the latest models with thinking capabilities (Claude 3.7 with thinking, O1). You can verify that it is correctly set up by running:
    ```bash
    python utils/call_llm.py
+
+   ИЛИ в среде исполнения, например консоль Power Shell заводим переменные окружения перед запуском основным.
+   
+   $env:GEMINI_API_KEY="AIzaSyBXEcK_E..|\/..GsWrG"
+   $env:GEMINI_MODEL="gemini-flash-latest"
    ```
 
-5. Generate a complete codebase tutorial by running the main script:
-    ```bash
-    # Analyze a GitHub repository
-    python main.py --repo https://github.com/username/repo --include "*.py" "*.js" --exclude "tests/*" --max-size 50000
-
-    # Or, analyze a local directory
-    python main.py --dir /path/to/your/codebase --include "*.py" --exclude "*test*"
-
-    # Or, generate a tutorial in Chinese
-    python main.py --repo https://github.com/username/repo --language "Chinese"
-    ```
-
-    - `--repo` or `--dir` - Specify either a GitHub repo URL or a local directory path (required, mutually exclusive)
-    - `-n, --name` - Project name (optional, derived from URL/directory if omitted)
-    - `-t, --token` - GitHub token (or set GITHUB_TOKEN environment variable)
-    - `-o, --output` - Output directory (default: ./output)
-    - `-i, --include` - Files to include (e.g., "`*.py`" "`*.js`")
-    - `-e, --exclude` - Files to exclude (e.g., "`tests/*`" "`docs/*`")
-    - `-s, --max-size` - Maximum file size in bytes (default: 100KB)
-    - `--language` - Language for the generated tutorial (default: "english")
-    - `--max-abstractions` - Maximum number of abstractions to identify (default: 10)
-    - `--no-cache` - Disable LLM response caching (default: caching enabled)
-
-The application will crawl the repository, analyze the codebase structure, generate tutorial content in the specified language, and save the output in the specified directory (default: ./output).
+5. Excute main.py
+ ```bash
+ python main.py --student-id ivan123 --no-cache
+ ```
 
 
 <details>
  
-<summary> 🐳 <b>Running with Docker</b> </summary>
-
-To run this project in a Docker container, you'll need to pass your API keys as environment variables. 
-
-1. Build the Docker image
-   ```bash
-   docker build -t pocketflow-app .
-   ```
-
-2. Run the container
-
-   You'll need to provide your `GEMINI_API_KEY` for the LLM to function. If you're analyzing private GitHub repositories or want to avoid rate limits, also provide your `GITHUB_TOKEN`.
-   
-   Mount a local directory to `/app/output` inside the container to access the generated tutorials on your host machine.
-   
-   **Example for analyzing a public GitHub repository:**
-   
-   ```bash
-   docker run -it --rm \
-     -e GEMINI_API_KEY="YOUR_GEMINI_API_KEY_HERE" \
-     -v "$(pwd)/output_tutorials":/app/output \
-     pocketflow-app --repo https://github.com/username/repo
-   ```
-   
-   **Example for analyzing a local directory:**
-   
-   ```bash
-   docker run -it --rm \
-     -e GEMINI_API_KEY="YOUR_GEMINI_API_KEY_HERE" \
-     -v "/path/to/your/local_codebase":/app/code_to_analyze \
-     -v "$(pwd)/output_tutorials":/app/output \
-     pocketflow-app --dir /app/code_to_analyze
-   ```
-</details>
-
-## 💡 Development Tutorial
-
-- I built using [**Agentic Coding**](https://zacharyhuang.substack.com/p/agentic-coding-the-most-fun-way-to), the fastest development paradigm, where humans simply [design](docs/design.md) and agents [code](flow.py).
-
-- The secret weapon is [Pocket Flow](https://github.com/The-Pocket/PocketFlow), a 100-line LLM framework that lets Agents (e.g., Cursor AI) build for you
-
-- Check out the Step-by-step YouTube development tutorial:
 
 <br>
 <div align="center">
