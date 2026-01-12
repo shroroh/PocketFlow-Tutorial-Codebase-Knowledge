@@ -1,13 +1,13 @@
 # db.py
-
+# просто файл пустышка со структурой данных, заполняемых из БД, или как представленно здесь...
 class Database:
     def __init__(self):
         self.data = [
             {
                 "Full Name": "Иван Иванов",
-                "Login": "ivan123",
+                "Login": "ivan123", # связка логин-пароль для авторизации
                 "Password": "ivan",
-                "Marks and exams": {
+                "Marks and exams": { # Оценки
                     "Math": [5, 4, 3, 4, 5],
                     "Physics": [5, 4, 3, 4, 5],
                     "English": [5, 4, 3, 4, 5],
